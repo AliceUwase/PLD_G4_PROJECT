@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-
-# All the core process functionalities for the Client management feature
+# All the core process functionalities for the Client management feature in the app
 def add_client():
     """Add a new client to the system"""
     global client_id_counter
