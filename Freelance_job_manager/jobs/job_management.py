@@ -16,3 +16,11 @@ def add_job():
        project_name = input("Enter project name: ")
        due_date = input("Enter due date (DD/MM/YYYY): ")
        price = float(input("Enter project price: "))
+
+       jobs[job_id_counter] = {
+           'client_id': int(client_id),
+           'project_name': project_name,
+           'due_date': due_date,
+           'price': price,
+           'status': 'active'
+       }
