@@ -11,3 +11,8 @@ def add_job():
    print("\n-- Add New Job --")
    view_clients()
    client_id = input("\nEnter client ID: ")
+
+   if client_id.isdigit() and int(client_id) in clients:
+       project_name = input("Enter project name: ")
+       due_date = input("Enter due date (DD/MM/YYYY): ")
+       price = float(input("Enter project price: "))
