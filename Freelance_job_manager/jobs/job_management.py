@@ -24,3 +24,13 @@ def add_job():
            'price': price,
            'status': 'active'
        }
+       print(f"\nJob added successfully! Job ID: {job_id_counter}")
+       job_id_counter += 1
+   else:
+       print("\nInvalid client ID.")
+
+   def view_jobs(status='all'):
+       """View jobs based on status"""
+       if not jobs:
+           print("\nNo jobs found.")
+           return
