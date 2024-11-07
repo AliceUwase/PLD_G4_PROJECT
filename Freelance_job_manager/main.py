@@ -14,5 +14,15 @@ def main():
         
         if choice == '1':
             client_manager.run_menu()
+        elif choice == '2':
+            job_manager.run_menu()
+        elif choice == '3':
+            financial_manager.view_summary()
+        elif choice == '4':
+            print("\nThank you for using Freelance Job Manager Visit!")
+            break
+        else:
+            print("\nInvalid choice. Please try again.")
+            
             
         
