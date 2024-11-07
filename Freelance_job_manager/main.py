@@ -1,3 +1,4 @@
+from menu import DisplayMenu
 from auth.authentication import authenticate
 from client.client_manager import ClientManager
 from finance.financial_manager import FinancialManager
