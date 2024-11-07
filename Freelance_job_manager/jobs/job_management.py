@@ -34,3 +34,16 @@ def add_job():
        if not jobs:
            print("\nNo jobs found.")
            return
+       print(f"\n-- Job List ({status.title()}) --")
+       for job_id, job in jobs.items():
+           if status == 'all' or job['status'] == status:
+               client = clients[job['client_id']]
+               print(f"\nJob ID: {job_id}")
+               print(f"Client: {client['name']}")
+               print(f"Project: {job['project_name']}")
+               print(f"Due Date: {job['due_date']}")
+               print(f"Price: ${job['price']:.2f}")
+               print(f"Status: {job['status']}")
+
+
+
