@@ -1,5 +1,6 @@
 def display_menu():
-    print("\n ============ Freelance Job Manager Menu ================")
+    """Display the main menu options"""
+    print("\n===== FREELANCE JOB MANAGER =====")
     print("1. Client Management")
     print("2. Job Management")
     print("3. Financial Overview")

@@ -4,4 +4,3 @@ class JobManager:
         self.job_id_counter = 1
         self.client_manager = client_manager
 
-    def add_job(self:
