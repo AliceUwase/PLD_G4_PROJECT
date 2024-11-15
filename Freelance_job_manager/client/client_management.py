@@ -33,3 +33,22 @@ def search_clients(self):
   if not found:
     print("\nNo matching clients found.")
 
+def run_menu(self):
+  while True:
+    print("\n-- Client Management --")
+    print("1. Add New Client")
+    print("2. View Clients")
+    print("3. Search Clients")
+    print("4. Back to Main Menu")
+
+    sub_choice = input("\nEnter your choice (1-4): ")
+    if sub_choice == '1':
+      self.add_client()
+    elif sub_choice == '2':
+      self.view_clients()
+    elif sub_choice == '3':
+      self.search_clients()
+    elif sub_choice == '4':
+      break
+    else:
+      print("\nInvalid choice. Please try again.")
