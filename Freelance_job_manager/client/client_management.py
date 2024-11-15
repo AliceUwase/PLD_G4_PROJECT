@@ -3,4 +3,3 @@ def add_client(self):
   name = input("Enter client name: ")
   contact = input("Enter client contact (email/phone): ")
   notes = input("Enter any notes (optional): ")
-
