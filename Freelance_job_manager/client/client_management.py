@@ -18,3 +18,18 @@ def view_clients(self):
     print(f"Name: {client['name']}")
     print(f"Contact: {client['contact']}")
     print(f"Notes: {client['notes']}")
+
+def search_clients(self):
+  search_term = input("\nEnter client name to search: ").lower()
+  found = False
+
+  for client_id, client in self.clients.items():
+    if search_term in client['name'].lower():
+      print(f"\nClient ID: {client_id}")
+      print(f"Name: {client['name']}")
+      print(f"Contact: {client['contact']}")
+      found = True
+
+  if not found:
+    print("\nNo matching clients found.")
+
