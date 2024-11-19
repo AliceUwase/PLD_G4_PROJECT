@@ -85,3 +85,24 @@ def search_clients(self):
             print("6. Delete All Clients")
             print("7. Back to Main Menu")
 
+            sub_choice = input("\nEnter your choice (1-7): ")
+            if sub_choice == '1':
+                name = input("Enter client name: ")
+                contact_info = input("Enter client contact info: ")
+                notes = input("Enter client notes (optional): ")
+                self.add_client(name, contact_info, notes)
+            elif sub_choice == '2':
+                self.view_clients()
+            elif sub_choice == '3':
+                self.search_clients()
+            elif sub_choice == '4':
+                self.update_client()
+            elif sub_choice == '5':
+                self.delete_one_client()
+            elif sub_choice == '6':
+                self.delete_all_clients()
+            elif sub_choice == '7':
+                break
+            else:
+                print("\nInvalid choice. Please try again.")
+
