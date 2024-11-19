@@ -55,5 +55,16 @@ def search_clients(self):
         except ValueError:
             print("\nInvalid input. Please enter a valid Client ID.")
 
+ def delete_one_client(self):
+        try:
+            client_id = int(input("\nEnter Client ID to delete: "))
+            if client_id < 0 or client_id >= len(self.clients):
+                print("\nInvalid Client ID.")
+                return
+
+            deleted_client = self.clients.pop(client_id)
+            print(f"Client '{deleted_client['name']}' deleted.")
+        except ValueError:
+            print("\nInvalid input. Please enter a valid Client ID.")
 
 
