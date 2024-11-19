@@ -52,3 +52,6 @@ def run_menu(self):
       break
     else:
       print("\nInvalid choice. Please try again.")
+
+
+print(ClientManager.run_menu())
