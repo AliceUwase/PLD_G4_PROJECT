@@ -74,4 +74,14 @@ def search_clients(self):
             print("\nAll clients have been deleted.")
         else:
             print("\nOperation cancelled.")
+ def run_menu(self):
+        while True:
+            print("\n-- Client Management --")
+            print("1. Add New Client")
+            print("2. View Clients")
+            print("3. Search Clients")
+            print("4. Update Client")
+            print("5. Delete One Client")
+            print("6. Delete All Clients")
+            print("7. Back to Main Menu")
 
