@@ -67,4 +67,11 @@ def search_clients(self):
         except ValueError:
             print("\nInvalid input. Please enter a valid Client ID.")
 
+ def delete_all_clients(self):
+        confirmation = input("\nAre you sure you want to delete all clients? (yes/no): ").lower()
+        if confirmation == 'yes':
+            self.clients.clear()
+            print("\nAll clients have been deleted.")
+        else:
+            print("\nOperation cancelled.")
 
