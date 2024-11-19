@@ -33,4 +33,27 @@ def search_clients(self):
   if not found:
     print("\nNo matching clients found.")
 
+ def update_client(self):
+        try:
+            client_id = int(input("\nEnter Client ID to update: "))
+            if client_id < 0 or client_id >= len(self.clients):
+                print("\nInvalid Client ID.")
+                return
+
+            name = input("Enter new name (leave blank to keep current): ")
+            contact = input("Enter new contact info (leave blank to keep current): ")
+            notes = input("Enter new notes (leave blank to keep current): ")
+
+            if name:
+                self.clients[client_id]['name'] = name
+            if contact:
+                self.clients[client_id]['contact'] = contact
+            if notes:
+                self.clients[client_id]['notes'] = notes
+
+            print(f"Client ID {client_id} updated successfully.")
+        except ValueError:
+            print("\nInvalid input. Please enter a valid Client ID.")
+
+
 
