@@ -2,38 +2,42 @@ class ClientManager:
     def __init__(self):
         self.clients = []
 
-    def add_client(self, name, contact_info):
-        client = {"name": name, "contact_info": contact_info}
+    def add_client(self, name, contact_info, notes=""):
+        client = {
+            "name": name, 
+            "contact_info": contact_info,
+            "notes": notes
+        }
         self.clients.append(client)
         print(f"Client '{name}' added.")
 
-def view_clients(self):
-  if not self.clients:
-    print("\nNo clients found.")
-    return
+    def view_clients(self):
+        if not self.clients:
+            print("\nNo clients found.")
+            return
 
-  print("\n-- Client List --")
-  for client_id, client in self.clients.items():
-    print(f"\nClient ID: {client_id}")
-    print(f"Name: {client['name']}")
-    print(f"Contact: {client['contact']}")
-    print(f"Notes: {client['notes']}")
+        print("\n-- Client List --")
+        for client_id, client in enumerate(self.clients):
+            print(f"\nClient ID: {client_id}")
+            print(f"Name: {client['name']}")
+            print(f"Contact: {client['contact_info']}")
+            print(f"Notes: {client['notes']}")
 
-def search_clients(self):
-  search_term = input("\nEnter client name to search: ").lower()
-  found = False
+    def search_clients(self):
+        search_term = input("\nEnter client name to search: ").lower()
+        found = False
 
-  for client_id, client in self.clients.items():
-    if search_term in client['name'].lower():
-      print(f"\nClient ID: {client_id}")
-      print(f"Name: {client['name']}")
-      print(f"Contact: {client['contact']}")
-      found = True
+        for client_id, client in enumerate(self.clients):
+            if search_term in client['name'].lower():
+                print(f"\nClient ID: {client_id}")
+                print(f"Name: {client['name']}")
+                print(f"Contact: {client['contact_info']}")
+                found = True
 
-  if not found:
-    print("\nNo matching clients found.")
+        if not found:
+            print("\nNo matching clients found.")
 
- def update_client(self):
+    def update_client(self):
         try:
             client_id = int(input("\nEnter Client ID to update: "))
             if client_id < 0 or client_id >= len(self.clients):
@@ -55,7 +59,7 @@ def search_clients(self):
         except ValueError:
             print("\nInvalid input. Please enter a valid Client ID.")
 
- def delete_one_client(self):
+    def delete_one_client(self):
         try:
             client_id = int(input("\nEnter Client ID to delete: "))
             if client_id < 0 or client_id >= len(self.clients):
@@ -67,14 +71,15 @@ def search_clients(self):
         except ValueError:
             print("\nInvalid input. Please enter a valid Client ID.")
 
- def delete_all_clients(self):
+    def delete_all_clients(self):
         confirmation = input("\nAre you sure you want to delete all clients? (yes/no): ").lower()
         if confirmation == 'yes':
             self.clients.clear()
             print("\nAll clients have been deleted.")
         else:
             print("\nOperation cancelled.")
- def run_menu(self):
+
+    def run_menu(self):
         while True:
             print("\n-- Client Management --")
             print("1. Add New Client")
