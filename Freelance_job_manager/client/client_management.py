@@ -1,46 +1,56 @@
+from db.db import cursor, conn
+
 class ClientManager:
     def __init__(self):
-        self.clients = []
+        pass
 
     def add_client(self, name, contact_info, notes=""):
-        client = {
-            "name": name, 
-            "contact_info": contact_info,
-            "notes": notes
-        }
-        self.clients.append(client)
+        query = """
+        INSERT INTO clients (name, contact_info, notes)
+        VALUES (%s, %s, %s)
+        """
+        cursor.execute(query, (name, contact_info, notes))
+        conn.commit()
         print(f"Client '{name}' added.")
 
     def view_clients(self):
-        if not self.clients:
+        cursor.execute("SELECT * FROM clients")
+        clients = cursor.fetchall()
+        
+        if not clients:
             print("\nNo clients found.")
             return
 
         print("\n-- Client List --")
-        for client_id, client in enumerate(self.clients):
-            print(f"\nClient ID: {client_id}")
-            print(f"Name: {client['name']}")
-            print(f"Contact: {client['contact_info']}")
-            print(f"Notes: {client['notes']}")
+        for client in clients:
+            print(f"\nClient ID: {client[0]}")
+            print(f"Name: {client[1]}")
+            print(f"Contact: {client[2]}")
+            print(f"Notes: {client[3]}")
 
     def search_clients(self):
         search_term = input("\nEnter client name to search: ").lower()
-        found = False
+        
+        query = "SELECT * FROM clients WHERE LOWER(name) LIKE %s"
+        cursor.execute(query, (f"%{search_term}%",))
+        clients = cursor.fetchall()
 
-        for client_id, client in enumerate(self.clients):
-            if search_term in client['name'].lower():
-                print(f"\nClient ID: {client_id}")
-                print(f"Name: {client['name']}")
-                print(f"Contact: {client['contact_info']}")
-                found = True
-
-        if not found:
+        if not clients:
             print("\nNo matching clients found.")
+            return
+
+        for client in clients:
+            print(f"\nClient ID: {client[0]}")
+            print(f"Name: {client[1]}")
+            print(f"Contact: {client[2]}")
 
     def update_client(self):
         try:
             client_id = int(input("\nEnter Client ID to update: "))
-            if client_id < 0 or client_id >= len(self.clients):
+            
+            # Check if client exists
+            cursor.execute("SELECT * FROM clients WHERE client_id = %s", (client_id,))
+            if not cursor.fetchone():
                 print("\nInvalid Client ID.")
                 return
 
@@ -48,33 +58,51 @@ class ClientManager:
             contact = input("Enter new contact info (leave blank to keep current): ")
             notes = input("Enter new notes (leave blank to keep current): ")
 
+            updates = []
+            values = []
             if name:
-                self.clients[client_id]['name'] = name
+                updates.append("name = %s")
+                values.append(name)
             if contact:
-                self.clients[client_id]['contact'] = contact
+                updates.append("contact_info = %s")
+                values.append(contact)
             if notes:
-                self.clients[client_id]['notes'] = notes
+                updates.append("notes = %s")
+                values.append(notes)
 
-            print(f"Client ID {client_id} updated successfully.")
+            if updates:
+                query = f"UPDATE clients SET {', '.join(updates)} WHERE client_id = %s"
+                values.append(client_id)
+                cursor.execute(query, tuple(values))
+                conn.commit()
+                print(f"Client ID {client_id} updated successfully.")
+            
         except ValueError:
             print("\nInvalid input. Please enter a valid Client ID.")
 
     def delete_one_client(self):
         try:
             client_id = int(input("\nEnter Client ID to delete: "))
-            if client_id < 0 or client_id >= len(self.clients):
+            
+            # Check if client exists
+            cursor.execute("SELECT name FROM clients WHERE client_id = %s", (client_id,))
+            client = cursor.fetchone()
+            if not client:
                 print("\nInvalid Client ID.")
                 return
 
-            deleted_client = self.clients.pop(client_id)
-            print(f"Client '{deleted_client['name']}' deleted.")
+            cursor.execute("DELETE FROM clients WHERE client_id = %s", (client_id,))
+            conn.commit()
+            print(f"Client '{client[0]}' deleted.")
+            
         except ValueError:
             print("\nInvalid input. Please enter a valid Client ID.")
 
     def delete_all_clients(self):
         confirmation = input("\nAre you sure you want to delete all clients? (yes/no): ").lower()
         if confirmation == 'yes':
-            self.clients.clear()
+            cursor.execute("DELETE FROM clients")
+            conn.commit()
             print("\nAll clients have been deleted.")
         else:
             print("\nOperation cancelled.")
