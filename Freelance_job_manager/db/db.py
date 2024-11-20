@@ -3,7 +3,11 @@ import mysql.connector as connector
 
 try:
     print("Establishing a new connection between MySQL and Python.")
-    connection=connector.connect(user="root",password="POSTGRES")
+    conn = connector.connect(
+        user="root",
+        password="POSTGRES",
+        database="freelance_job_manager"
+    )
     print("A connection between MySQL and Python is successfully established")
 
 except connector.Error as er:
@@ -11,7 +15,4 @@ except connector.Error as er:
     print("Error message:", er.msg)
 
 
-cursor = connection.cursor()
-
-
-connection.database
+cursor = conn.cursor()
