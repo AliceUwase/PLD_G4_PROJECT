@@ -1,74 +1,77 @@
+from db.db import cursor, conn
+
 class JobManager:
     def __init__(self, client_manager):
         self.client_manager = client_manager
-        self.jobs = []
-        self._next_id = 1  # Add counter for unique IDs
-        
+
     def add_job(self, job_name, client_name, rate, hours):
-        # Method to add a new job
-        job = {
-            "id": self._next_id,
-            "job_name": job_name, 
-            "client_name": client_name, 
-            "rate": rate, 
-            "hours": hours
-        }
-        self._next_id += 1
-        self.jobs.append(job)
+        query = """
+        INSERT INTO jobs (job_name, client_name, rate, hours)
+        VALUES (%s, %s, %s, %s)
+        """
+        cursor.execute(query, (job_name, client_name, rate, hours))
+        conn.commit()
         print(f"Job '{job_name}' added for client '{client_name}'.")
 
     def list_jobs(self):
-        # Method to display all stored jobs
-        if not self.jobs:
+        cursor.execute("SELECT * FROM jobs")
+        jobs = cursor.fetchall()
+        
+        if not jobs:
             print("No jobs available.")
             return
-        for job in self.jobs:
-            # Prints detailed information for each job
-            print(f"ID: {job['id']} - {job['job_name']} for {job['client_name']} - {job['hours']} hours at ${job['rate']} per hour")
-
-    def get_job_by_id(self, job_id):
-        # Helper method to find job by ID
-        for index, job in enumerate(self.jobs):
-            if job['id'] == job_id:
-                return index, job
-        return None, None
+            
+        for job in jobs:
+            print(f"ID: {job[0]} - {job[1]} for {job[2]} - {job[4]} hours at ${job[3]} per hour")
 
     def update_job(self, job_id):
-        # Update an existing job's details
-        index, job = self.get_job_by_id(job_id)
-        if job is None:
+        # Check if job exists
+        cursor.execute("SELECT * FROM jobs WHERE job_id = %s", (job_id,))
+        job = cursor.fetchone()
+        if not job:
             print("Invalid job ID.")
             return
 
-        print(f"\nUpdating Job: {job['job_name']}")
+        print(f"\nUpdating Job: {job[1]}")
         print("Leave blank to keep current value")
 
-        # Get new values or keep current ones if input is blank
-        new_name = input(f"Enter new job name ({job['job_name']}): ")
-        new_client = input(f"Enter new client name ({job['client_name']}): ")
-        new_rate = input(f"Enter new rate (${job['rate']}): ")
-        new_hours = input(f"Enter new hours ({job['hours']}): ")
+        new_name = input(f"Enter new job name ({job[1]}): ")
+        new_client = input(f"Enter new client name ({job[2]}): ")
+        new_rate = input(f"Enter new rate (${job[3]}): ")
+        new_hours = input(f"Enter new hours ({job[4]}): ")
 
-        # Update only if new value provided
+        updates = []
+        values = []
         if new_name:
-            job['job_name'] = new_name
+            updates.append("job_name = %s")
+            values.append(new_name)
         if new_client:
-            job['client_name'] = new_client
+            updates.append("client_name = %s")
+            values.append(new_client)
         if new_rate:
-            job['rate'] = float(new_rate)
+            updates.append("rate = %s")
+            values.append(float(new_rate))
         if new_hours:
-            job['hours'] = float(new_hours)
+            updates.append("hours = %s")
+            values.append(float(new_hours))
 
-        print("Job updated successfully!")    
+        if updates:
+            query = f"UPDATE jobs SET {', '.join(updates)} WHERE job_id = %s"
+            values.append(job_id)
+            cursor.execute(query, tuple(values))
+            conn.commit()
+            print("Job updated successfully!")
 
     def delete_job(self, job_id):
-        # Method to delete a job
-        index, job = self.get_job_by_id(job_id)
-        if job is not None:
-            removed_job = self.jobs.pop(index)
-            print(f"Job '{removed_job['job_name']}' for client '{removed_job['client_name']}' deleted successfully.")
-        else:
+        cursor.execute("SELECT job_name, client_name FROM jobs WHERE job_id = %s", (job_id,))
+        job = cursor.fetchone()
+        if not job:
             print("Invalid job ID. Delete failed.")
+            return
+
+        cursor.execute("DELETE FROM jobs WHERE job_id = %s", (job_id,))
+        conn.commit()
+        print(f"Job '{job[0]}' for client '{job[1]}' deleted successfully.")
 
     def run_menu(self):
         # Method to provide an interactive menu for job management
@@ -96,19 +99,27 @@ class JobManager:
                 self.list_jobs()
 
             elif choice == '3':
-                if not self.jobs:
+                # Check if jobs exist by querying the database
+                cursor.execute("SELECT EXISTS(SELECT 1 FROM jobs)")
+                jobs_exist = cursor.fetchone()[0]
+                if not jobs_exist:
                     print("No jobs available to update.")
                     continue
                 self.list_jobs()
                 job_id = int(input("Enter the job ID to update: "))
                 self.update_job(job_id)
+
             elif choice == '4':
-                if not self.jobs:
+                # Check if jobs exist by querying the database
+                cursor.execute("SELECT EXISTS(SELECT 1 FROM jobs)")
+                jobs_exist = cursor.fetchone()[0]
+                if not jobs_exist:
                     print("No jobs available to delete.")
                     continue
                 self.list_jobs()
                 job_id = int(input("Enter the job ID to delete: "))
                 self.delete_job(job_id)
+
             elif choice == '5':
                 print("Exiting Job Management Menu.")
                 break
