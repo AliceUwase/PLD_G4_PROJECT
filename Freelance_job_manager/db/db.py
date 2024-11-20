@@ -14,12 +14,4 @@ except connector.Error as er:
 cursor = connection.cursor()
 
 
-cursor.execute("DROP DATABASE IF EXISTS `freelance_job_manager`")
-cursor.execute("CREATE DATABASE IF NOT EXISTS `freelance_job_manager`")
-cursor.execute("SHOW DATABASES")
-for database in cursor:
-    print(database)
-
-cursor.execute("USE `freelance_job_manager`")
-
 connection.database
