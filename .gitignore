@@ -1,4 +1,10 @@
-__pycache__
 venv
 .venv
 .vscode
+
+Freelance_job_manager/__pycache__
+Freelance_job_manager/auth/__pycache__
+Freelance_job_manager/db/__pycache__
+Freelance_job_manager/jobs/__pycache__
+Freelance_job_manager/client/__pycache__
+Freelance_job_manager/finance/__pycache__
