@@ -1,6 +1,6 @@
 from client.client_management import ClientManager
 from jobs.job_management import JobManager
-from finance.financial_management import FinancialManager
+from finance.financeManagement import FinancialSummary
 from menu import display_menu
 
 welcome_screen = """
@@ -8,13 +8,13 @@ welcome_screen = """
 ██╔════╝██╔══██╗██╔════╝██╔════╝██║     ██╔══██╗████╗  ██║██╔════╝██╔════╝
 █████╗  ██████╔╝█████╗  █████╗  ██║     ███████║██╔██╗ ██║██║     █████╗  
 ██╔══╝  ██╔══██╗██╔══╝  ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║     ██╔══╝  
-██║     ██║  ██║███████╗███████╗███████╗██║  ██║██║ ╚████║╚██████╗███████���
+██║     ██║  ██║███████╗███████╗███████╗██║  ██║██║ ╚████║╚█████╗███████
 ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝
      ██╗ ██████╗ ██████╗     ███╗   ███╗ █████╗ ███╗   ██╗ █████╗  ██████╗ ███████╗██████╗ 
      ██║██╔═══██╗██╔══██╗    ████╗ ████║██╔══██╗████╗  ██║██╔══██╗██╔════╝ ██╔════╝██╔══██╗
      ██║██║   ██║██████╔╝    ██╔████╔██║███████║██╔██╗ ██║███████║██║  ███╗█████╗  ██████╔╝
 ██   ██║██║   ██║██╔══██╗    ██║╚██╔╝██║██╔══██║██║╚██╗██║██╔══██║██║   ██║██╔══╝  ██╔══██╗
-╚█████╔╝╚██████╔╝██████╔╝    ██║ ╚═╝ ██║██║  ██║██║ ╚████║██║  ██║╚██████╔╝��██████╗██║  ██║
+╚█████╔╝╚██████╔╝██████╔╝    ██║ ╚═╝ ██║██║  ██║██║ ╚████║██║  ██║██████╔╝██████╗██║  ██║
  ╚════╝  ╚═════╝ ╚═════╝     ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝
 """
 
@@ -25,7 +25,7 @@ def main():
     # Initialize managers
     client_manager = ClientManager()
     job_manager = JobManager(client_manager)
-    financial_manager = FinancialManager(job_manager)
+    financial_manager = FinancialSummary(job_manager)
 
     while True:
         display_menu()
@@ -36,7 +36,7 @@ def main():
         elif choice == '2':
             job_manager.run_menu()
         elif choice == '3':
-            financial_manager.view_summary()
+            financial_manager.display_summary()
         elif choice == '4':
             print("\nThank you for using Freelance Job Manager!")
             break
