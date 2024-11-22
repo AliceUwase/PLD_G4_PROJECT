@@ -3,16 +3,17 @@ from db.db import cursor, conn
 class ClientManager:
     def __init__(self):
         pass
-
-    def add_client(self, name, contact_info, notes=""):
+    # add client
+    def add_client(self, name, contact_info, email, notes=""):
         query = """
-        INSERT INTO clients (name, contact_info, notes)
-        VALUES (%s, %s, %s)
+        INSERT INTO clients (name, contact_info, email, notes)
+        VALUES (%s, %s, %s, %s)
         """
-        cursor.execute(query, (name, contact_info, notes))
+        cursor.execute(query, (name, contact_info, email, notes))
         conn.commit()
         print(f"Client '{name}' added.")
 
+    # view clients
     def view_clients(self):
         cursor.execute("SELECT * FROM clients")
         clients = cursor.fetchall()
@@ -21,13 +22,32 @@ class ClientManager:
             print("\nNo clients found.")
             return
 
-        print("\n-- Client List --")
-        for client in clients:
-            print(f"\nClient ID: {client[0]}")
-            print(f"Name: {client[1]}")
-            print(f"Contact: {client[2]}")
-            print(f"Notes: {client[3]}")
 
+        columns = [desc[0] for desc in cursor.description]
+        
+
+        widths = {col: len(col) for col in columns}
+        for client in clients:
+            for i, value in enumerate(client):
+                widths[columns[i]] = max(widths[columns[i]], len(str(value)))
+        
+
+        print("\n" + "-" * (sum(widths.values()) + (len(columns) * 3) + 1))
+        header = "| "
+        for col in columns:
+            header += f"{col:<{widths[col]}} | "
+        print(header)
+        print("-" * (sum(widths.values()) + (len(columns) * 3) + 1))
+        
+ 
+        for client in clients:
+            row = "| "
+            for i, value in enumerate(client):
+                row += f"{str(value):<{widths[columns[i]]}} | "
+            print(row)
+        print("-" * (sum(widths.values()) + (len(columns) * 3) + 1))
+
+    # search clients
     def search_clients(self):
         search_term = input("\nEnter client name to search: ").lower()
         
@@ -56,6 +76,7 @@ class ClientManager:
 
             name = input("Enter new name (leave blank to keep current): ")
             contact = input("Enter new contact info (leave blank to keep current): ")
+            email = input("Enter new email (leave blank to keep current): ")
             notes = input("Enter new notes (leave blank to keep current): ")
 
             updates = []
@@ -66,6 +87,9 @@ class ClientManager:
             if contact:
                 updates.append("contact_info = %s")
                 values.append(contact)
+            if email:
+                updates.append("email = %s")
+                values.append(email)
             if notes:
                 updates.append("notes = %s")
                 values.append(notes)
@@ -80,6 +104,7 @@ class ClientManager:
         except ValueError:
             print("\nInvalid input. Please enter a valid Client ID.")
 
+    # delete one client
     def delete_one_client(self):
         try:
             client_id = int(input("\nEnter Client ID to delete: "))
@@ -97,7 +122,7 @@ class ClientManager:
             
         except ValueError:
             print("\nInvalid input. Please enter a valid Client ID.")
-
+    # delete all clients
     def delete_all_clients(self):
         confirmation = input("\nAre you sure you want to delete all clients? (yes/no): ").lower()
         if confirmation == 'yes':
@@ -122,8 +147,9 @@ class ClientManager:
             if sub_choice == '1':
                 name = input("Enter client name: ")
                 contact_info = input("Enter client contact info: ")
+                email = input("Enter client email: ")
                 notes = input("Enter client notes (optional): ")
-                self.add_client(name, contact_info, notes)
+                self.add_client(name, contact_info, email, notes)
             elif sub_choice == '2':
                 self.view_clients()
             elif sub_choice == '3':
